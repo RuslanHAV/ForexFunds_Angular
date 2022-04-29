@@ -11,7 +11,6 @@ import {
 } from "ng-apexcharts";
 
 export type ChartOptions = {
-  // series: ApexNonAxisChartSeries;
   chart: ApexChart;
   labels: string[];
   colors: string[];
@@ -23,32 +22,33 @@ export type ChartOptions = {
 
 declare var jQuery: any;
 
-var wins:any=[66, 56, 31, 5, 521, 506, 36];
-var loses:any=[15, 21, 32, 1, 24, 23, 7];
+var wins:any=[0, 56, 31, 5, 521, 506, 36];
+var loses:any=[0, 21, 32, 1, 24, 23, 7];
 
 function convertStrokeOpacity(){
-  (function ($) {
-    $(document).ready(function(){
-      var radialSeries = $('.apexcharts-radial-series > path');
-      for(var x of radialSeries){
-        var prev = $(x).attr('stroke');
-        var cur = prev.split(',')[0] + ',' + prev.split(',')[1] + ',' + prev.split(',')[2]+ ',1)';
-        $(x).attr('stroke', cur)
-      }
+  document.addEventListener("DOMContentLoaded", function(event) { 
+    var radialSeries = document.querySelectorAll('.apexcharts-radial-series > path');
+    for(var i = 0 ; i < radialSeries.length ; i ++){
+      var x = radialSeries[i];
+      var prev, cur;
+      prev = x.getAttribute('stroke');
+      if(prev) cur = prev.split(',')[0] + ',' + prev.split(',')[1] + ',' + prev.split(',')[2]+ ',1)';
+      if(cur) x.setAttribute('stroke', cur);
+    }
 
-      var spanWins = $('span.wins');
-      for(var x of spanWins){
-        var id = $(x).attr('index');
-        $(x).html(wins[id])
-      }
-      var spanLoses = $('span.loses');
-      for(var x of spanLoses){
-        var id = $(x).attr('index');
-        $(x).html(loses[id])
-      }
-
-    });
-  })(jQuery);
+    var spanWins = document.querySelectorAll('span.wins');
+    for(i = 0 ; i < wins.length ; i ++){
+      x = spanWins[i];
+      var id = x.getAttribute('index');
+      if(id) x.innerHTML = wins[id]
+    }
+    var spanLoses = document.querySelectorAll('span.loses');
+    for(i = 0 ; i < loses.length ; i ++){
+      x = spanLoses[i];
+      id = x.getAttribute('index');
+      if(id) x.innerHTML = loses[id]
+    }
+  });
 }
 
 @Component({
@@ -120,20 +120,21 @@ export class AppComponent implements OnInit{
       
       formatter: function(seriesName, opts) {
         let wins = opts.w.globals.series[opts.seriesIndex];
-        let firstSpaces = "";
-        let nbsps = [12, 11, 6, 10, 15, 11, 13]
-        for(var i = 0 ; i < nbsps[opts.seriesIndex]; i ++) firstSpaces += "&nbsp;"; 
+        // let nbsps = [12, 11, 6, 10, 15, 11, 13]
+        // for(var i = 0 ; i < nbsps[opts.seriesIndex]; i ++) firstSpaces += "&nbsp;"; 
 
         let loses = 100 - wins;
-        return seriesName + ":" + firstSpaces +
-                "<div style='opacity:0.6; display:inline-flex;'>"+
-                  "<div style='width:120px'>"+
+        return "<div style='display:inline-flex;'>"+
+                "<div style='width:120px'>"+
+                  seriesName + ":" +
+                "</div>"+          
+                "<div style='width:120px'>"+
                   "<font color='white'>"+
                       "wins: " + 
                       "<span class='wins' index="+opts.seriesIndex+">" + wins + "</span>" +
                   "</font>"+
-                  "</div>"+ 
-                  "<div style='width:60px'>"+
+                "</div>"+ 
+                "<div >"+
                     "<font color='white'>"+
                       "loses: " + 
                       "<span class='loses' index="+opts.seriesIndex+">" + loses + "</span>" + 
@@ -164,9 +165,19 @@ export class AppComponent implements OnInit{
     var _series = [];
 
     for(var i = 0 ; i < _wins.length ; i ++){
-      var tot = _wins[i] + _loses[i];
-      _series.push(Math.floor((_wins[i]/tot)*100))
+      var win = _wins[i];
+      var lose = _loses[i];
+      var tot = win + lose;
+      var result;
+      
+      if(win == 0) result = NaN;
+      else if(loses == 0) result = 100
+      else result = Math.floor((_wins[i]/tot)*100);
+
+      _series.push(result)
     }
     this.series = _series;
+
+    console.log(_series)
   } 
 }
