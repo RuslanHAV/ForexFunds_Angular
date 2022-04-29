@@ -11,15 +11,20 @@
     min-height: 700 !important;
 }
 :host /deep/ .apexcharts-graphical{
-    transform: scaleX(-1) rotate(-90deg) translate(80px, 90px);
+    transform: scaleX(-1) rotate(-90deg) translate(77px, 90px);
     transform-origin: center;
 }
 
 :host /deep/ .apexcharts-radial-series > path{
-    stroke-width: 8px;
+    stroke-width: 8px;   
 }
 
 :host /deep/ .apexcharts-radialbar-track > path{
     stroke-width: 4px;
+}
+
+:host /deep/ span.apexcharts-legend-marker {
+    width: 7px !important;
+    height: 7px !important;
 }
 
