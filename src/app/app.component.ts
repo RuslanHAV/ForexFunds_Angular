@@ -121,30 +121,9 @@ export class AppComponent implements OnInit{
       formatter: function(seriesName, opts) {
         let wins = opts.w.globals.series[opts.seriesIndex];
         let firstSpaces = "";
-        switch(opts.w.config.labels[opts.seriesIndex]){
-          case "Monday":
-            firstSpaces = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-            break;
-          case "Tuesday":
-            firstSpaces = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-            break;
-          case "Wednesday":
-            firstSpaces = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-            break;
-          case "Thursday":
-            firstSpaces = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-            break;
-          case "Friday":
-            firstSpaces = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-            break;
-          case "Saturday":
-            firstSpaces = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-            break;
-          case "Sunday":
-            firstSpaces = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-            break;
-          default: break;
-        }
+        let nbsps = [12, 11, 6, 10, 15, 11, 13]
+        for(var i = 0 ; i < nbsps[opts.seriesIndex]; i ++) firstSpaces += "&nbsp;"; 
+
         let loses = 100 - wins;
         return seriesName + ":" + firstSpaces +
                 "<div style='opacity:0.6; display:inline-flex;'>"+
